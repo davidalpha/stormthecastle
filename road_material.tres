@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cuv1xh40wi44s"]
+
+[ext_resource type="Shader" uid="uid://db3ilgc4wxewx" path="res://road_shader.gdshader" id="1_shader"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/height_min = 5.0
+shader_parameter/height_max = 4.75e-07
+shader_parameter/height_threshold = 0.3
+shader_parameter/surface_color = Color(1, 0.62029, 0.143727, 1)
+shader_parameter/side_color = Color(0.578988, 0.570833, 0.753765, 1)
