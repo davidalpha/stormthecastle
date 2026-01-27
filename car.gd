@@ -11,6 +11,7 @@ class_name Car
 @export var drift_speed_threshold: float = 8.0  # Min speed to drift
 @export var steering_speed_scale: float = 0.5   # How much speed reduces steering (0 = no reduction)
 @export var max_tilt_angle: float = 0.7  # Max roll/pitch in radians (~40 degrees)
+@export var air_control: float = 1.5  # Air rotation strength (fraction of ground control)
 
 # Suspension
 @export var wheel_radius: float = 0.3
@@ -72,6 +73,14 @@ func _physics_process(delta: float) -> void:
 	if not grounded:
 		is_drifting = false
 		drift_smoke_effect.emitting = false
+		# Air control: yaw only (left/right)
+		var air_steer := 0.0
+		if Input.is_action_pressed("move_left"):
+			air_steer = 1.0
+		elif Input.is_action_pressed("move_right"):
+			air_steer = -1.0
+		angular_velocity.y = air_steer * air_control
+		_clamp_rotation()
 		return
 
 	var speed := linear_velocity.length()
