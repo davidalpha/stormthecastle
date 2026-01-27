@@ -32,19 +32,46 @@ class_name Car
 # Effects
 @onready var drift_smoke_effect: GPUParticles3D = $drift_smoke_effect
 
+# Car body mesh for visual squat
+@onready var car_body: Node3D = $rally_car_prototype_small
+
+# Jump
+@export var jump_force: float = 400.0
+@export var squat_amount: float = 0.3  # How far the mesh lowers when charging
+
 var wheel_spin: float = 0.0
 var current_steer_angle: float = 0.0
 var is_drifting: bool = false
 var drift_amount: float = 0.0  # 0-1, for visual feedback
+var is_squatting: bool = false
+var car_body_rest_y: float = 0.0
 
 func _ready() -> void:
 	for ray in [ray_fl, ray_fr, ray_rl, ray_rr]:
 		ray.add_exception(self)
-	
+	car_body_rest_y = car_body.position.y
+
 
 func _physics_process(delta: float) -> void:
 	var grounded := _any_wheel_grounded()
+
+	# Jump: squat while holding, launch on release
+	var jump_held := Input.is_physical_key_pressed(KEY_SHIFT)
+	if jump_held and grounded:
+		is_squatting = true
+		car_body.position.y = lerp(car_body.position.y, car_body_rest_y - squat_amount, delta * 10.0)
+	elif is_squatting:
+		# Released jump key (or became airborne) — spring up
+		is_squatting = false
+		if grounded:
+			linear_velocity.y = jump_force / mass
+		car_body.position.y = car_body_rest_y
+	else:
+		car_body.position.y = lerp(car_body.position.y, car_body_rest_y, delta * 10.0)
+
 	if not grounded:
+		is_drifting = false
+		drift_smoke_effect.emitting = false
 		return
 
 	var speed := linear_velocity.length()
@@ -69,7 +96,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("move_forward"):
 		apply_central_force(-global_transform.basis.z * engine_power)
 	elif Input.is_action_pressed("move_backward"):
-		apply_central_force(global_transform.basis.z * engine_power * 0.5)
+		apply_central_force(global_transform.basis.z * engine_power)
 
 	# Speed-based steering reduction
 	var speed_factor: float = 1.0 - clamp(speed / max_speed, 0.0, 1.0) * steering_speed_scale
@@ -102,10 +129,21 @@ func _physics_process(delta: float) -> void:
 	var current_grip: float = lerpf(normal_grip, drift_grip, drift_amount)
 
 	if speed > 0.5:
+		# Grip only affects horizontal movement, preserve vertical velocity
+		var vel_y := linear_velocity.y
 		var forward_dir := -global_transform.basis.z
-		var current_dir := linear_velocity.normalized()
-		var new_dir := current_dir.lerp(forward_dir, current_grip * delta * 10.0).normalized()
-		linear_velocity = new_dir * speed
+		forward_dir.y = 0.0
+		forward_dir = forward_dir.normalized()
+		# Use the direction the car is actually traveling (forward or reverse)
+		var horizontal_vel := Vector3(linear_velocity.x, 0.0, linear_velocity.z)
+		var h_speed := horizontal_vel.length()
+		if h_speed > 0.5:
+			var forward_dot := forward_dir.dot(horizontal_vel.normalized())
+			var grip_dir := forward_dir if forward_dot >= 0.0 else -forward_dir
+			var current_dir := horizontal_vel.normalized()
+			var new_dir := current_dir.lerp(grip_dir, current_grip * delta * 10.0).normalized()
+			linear_velocity = new_dir * h_speed
+			linear_velocity.y = vel_y
 
 	# Update wheel visuals
 	_update_wheels(delta, turn_input, speed)

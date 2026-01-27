@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://cux8wcu3ll31b"]
 
-[ext_resource type="Script" path="res://follow_camera.gd" id="1_aqk2v"]
+[ext_resource type="Script" uid="uid://bofwfq30w71t6" path="res://follow_camera.gd" id="1_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://drgqx8i8q56q5" path="res://car.tscn" id="2_fj7yv"]
 [ext_resource type="Texture2D" uid="uid://c3m8nsq26a4n2" path="res://road.png" id="3_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://4ovvsefmydk0" path="res://bg.png" id="3_tlwt5"]
@@ -75,7 +75,7 @@ follow_distance = 6.0
 follow_height = 2.0
 
 [node name="Car" parent="." instance=ExtResource("2_fj7yv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.7691, 23.2462, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.7691, 0.0300167, 0)
 angular_damp = 5.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -94,6 +94,26 @@ skeleton = NodePath("../Camera3D")
 [node name="StaticBody3D" type="StaticBody3D" parent="ramp"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ramp/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_aqk2v")
+
+[node name="ramp2" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 1, 87.7154, 4.84118, 55.9816)
+mesh = SubResource("PrismMesh_fj7yv")
+skeleton = NodePath("../Camera3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="ramp2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ramp2/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_aqk2v")
+
+[node name="ramp3" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 1, 182.812, 4.84118, 55.9816)
+mesh = SubResource("PrismMesh_fj7yv")
+skeleton = NodePath("../Camera3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="ramp3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ramp3/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_aqk2v")
 
 [node name="cone" type="MeshInstance3D" parent="."]
