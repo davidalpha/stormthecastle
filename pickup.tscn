@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dlg3rdgktvw0b"]
 
-[ext_resource type="Script" path="res://pickup.gd" id="1_pickup"]
+[ext_resource type="Script" uid="uid://4on8u111gelh" path="res://pickup.gd" id="1_pickup"]
 [ext_resource type="Texture2D" uid="uid://c24ebatnf35jr" path="res://icon.svg" id="2_weqpt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_amdaw"]
@@ -10,18 +10,21 @@ uv1_scale = Vector3(2, 2, 2)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_default"]
 material = SubResource("StandardMaterial3D_amdaw")
-height = 0.1
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.2
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_detect"]
-radius = 1.5
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_weqpt"]
+radius = 1.0
+height = 4.0
 
 [node name="Pickup" type="Area3D"]
 script = ExtResource("1_pickup")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.5, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.77771, 0)
 mesh = SubResource("CylinderMesh_default")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("SphereShape3D_detect")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80241, 0)
+shape = SubResource("CapsuleShape3D_weqpt")

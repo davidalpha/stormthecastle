@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1pickuphud01"]
+[gd_scene load_steps=2 format=3 uid="uid://bk6bbfi3bqjc6"]
 
-[ext_resource type="Script" path="res://pickup_hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://xuit7nb72yp4" path="res://pickup_hud.gd" id="1_hud"]
 
 [node name="PickupHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")

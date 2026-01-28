@@ -40,6 +40,7 @@ class_name Car
 @export var jump_force: float = 400.0
 @export var squat_amount: float = 0.3  # How far the mesh lowers when charging
 
+var input_enabled: bool = false
 var wheel_spin: float = 0.0
 var current_steer_angle: float = 0.0
 var is_drifting: bool = false
@@ -54,6 +55,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# Always update wheels so they're positioned correctly during intro
+	_update_wheels(delta, 0.0, 0.0)
+
+	if not input_enabled:
+		return
+
 	var grounded := _any_wheel_grounded()
 
 	# Jump: squat while holding, launch on release

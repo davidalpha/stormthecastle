@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://c3m8nsq26a4n2" path="res://road.png" id="3_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://4ovvsefmydk0" path="res://bg.png" id="3_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://dlg3rdgktvw0b" path="res://pickup.tscn" id="4_pickup"]
-[ext_resource type="PackedScene" path="res://pickup_hud.tscn" id="5_hud"]
+[ext_resource type="PackedScene" uid="uid://bk6bbfi3bqjc6" path="res://pickup_hud.tscn" id="5_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fj7yv"]
 sky_top_color = Color(0.0942182, 0.000120628, 0.181955, 1)
@@ -68,24 +68,29 @@ transform = Transform3D(1, 0, 0, 0, 0.41969, 0.907668, 0, -0.907668, 0.41969, 0,
 sky_mode = 2
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
-transform = Transform3D(1, 0, 0, 0, 0.928751, 0.370703, 0, -0.370703, 0.928751, -50.7691, 26.182, 4.42335)
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, -50.7691, 26.182, 4.42335)
 doppler_tracking = 2
 fov = 90.0
 script = ExtResource("1_aqk2v")
 target = NodePath("../Car")
-follow_distance = 6.0
-follow_height = 2.0
+follow_distance = 5.0
+follow_height = 2.75
+position_smoothing = 10.0
+swoop_duration = 1.0
+orbit_distance = 5.0
 
 [node name="Car" parent="." instance=ExtResource("2_fj7yv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.7691, 0.0300167, 0)
 angular_damp = 5.0
+engine_power = 1000.0
+max_speed = 50.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_fj7yv")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="floor"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_tlwt5")
 
 [node name="ramp" type="MeshInstance3D" parent="."]
